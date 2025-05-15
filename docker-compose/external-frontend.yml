@@ -25,6 +25,8 @@ services:
         CACHE_ADDRESS_WITH_BALANCES_UPDATE_INTERVAL: ""
         ADMIN_PANEL_ENABLED: ""
         RELEASE_VERSION: 7.0.2
+    env_file:
+      - ./envs/defiverse-${NETWORK_NAME:-mainnet}-blockscout.env
 
   visualizer:
     extends:
