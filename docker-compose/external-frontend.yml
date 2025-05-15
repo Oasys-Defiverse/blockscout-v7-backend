@@ -6,8 +6,22 @@ services:
       file: ./services/redis.yml
       service: redis-db
 
+  db-init:
+    extends:
+      file: ./services/db.yml
+      service: db-init
+
+  db:
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    extends:
+      file: ./services/db.yml
+      service: db
+
   backend:
     depends_on:
+      - db
       - redis-db
     extends:
       file: ./services/backend.yml
@@ -25,6 +39,10 @@ services:
         CACHE_ADDRESS_WITH_BALANCES_UPDATE_INTERVAL: ""
         ADMIN_PANEL_ENABLED: ""
         RELEASE_VERSION: 7.0.2
+    links:
+      - db:database
+    env_file:
+      - ./envs/defiverse-${NETWORK_NAME:-mainnet}-blockscout.env
 
   visualizer:
     extends:
